@@ -27,6 +27,8 @@ internal class BackupClient
         sftpClient = new SftpClient(backupServer, backupPort, username, password);
     }
 
+    public bool DisplaySkippedFiles { get; set; } = true;
+
     public bool Connect()
     {
         try
@@ -60,11 +62,13 @@ internal class BackupClient
             {
                 DateTime remoteModifiedDateTime = DateTime.Parse(sftpClient.GetLastWriteTime(remoteFilePath).ToString("G"));
 
-                //Spectre.Console.AnsiConsole.MarkupLine($"[yellow bold]Local: {localModifiedDateTime}, Remote: {remoteModifiedDateTime}[/]");
-                
                 if (localModifiedDateTime <= remoteModifiedDateTime)
                 {
-                    Spectre.Console.AnsiConsole.MarkupLine($"[yellow bold]Skipping (already current): {file}[/]");
+                    if (DisplaySkippedFiles)
+                    {
+                        // Display skipped files if the property is set to true
+                        Spectre.Console.AnsiConsole.MarkupLine($"[yellow bold]Skipping (already current): {file}[/]");
+                    }
                     continue; // Skip if the file is not modified
                 }
             }
@@ -147,7 +151,11 @@ internal class BackupClient
                 DateTime localModifiedDateTime = DateTime.Parse(File.GetLastWriteTime(localFilePath).ToString("G"));
                 if (localModifiedDateTime >= remoteModifiedDateTime)
                 {
-                    Spectre.Console.AnsiConsole.MarkupLine($"[yellow bold]Skipping (already current): {file}[/]");
+                    if (DisplaySkippedFiles)
+                    {
+                        // Display skipped files if the property is set to true
+                        Spectre.Console.AnsiConsole.MarkupLine($"[yellow bold]Skipping (already current): {file}[/]");
+                    }
                     continue; // Skip if the file is not modified
                 }
             }

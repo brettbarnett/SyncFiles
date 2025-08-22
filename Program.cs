@@ -1,11 +1,12 @@
 ﻿using SyncFiles;
+using System.Configuration;
 
 string version = "1.0.0";
 
-string ftpUser = "brett";
-string ftpPassword = "FVa-09'%P>6w";
-string ftpServer = "10.0.0.2";
-int ftpPort = 22;
+string ftpUser = ConfigurationManager.AppSettings["FtpUser"]; //Username for the FTP server
+string ftpPassword = ConfigurationManager.AppSettings["FtpPassword"]; //Password for the FTP server
+string ftpServer = ConfigurationManager.AppSettings["FtpServer"]; //IP address of the FTP server
+int ftpPort = int.Parse(ConfigurationManager.AppSettings["FtpPort"]); //Port for the FTP server (default for SFTP is 22)
 
 string localUser = Environment.UserName;
 string localUserDirectory = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile);
@@ -15,6 +16,7 @@ Spectre.Console.AnsiConsole.WriteLine("Welcome to the User Profile Backup Utilit
 Spectre.Console.AnsiConsole.MarkupLine($"Version: [bold underline green]{version}[/]");
 
 BackupClient backupClient = new BackupClient(ftpServer, ftpPort, ftpUser, ftpPassword, localUserDirectory, remoteUserDirectory);
+
 if (!backupClient.Connect())
 {
     Console.WriteLine("Failed to connect to the backup server.");
@@ -29,9 +31,11 @@ string? choice = Console.ReadLine();
 switch (choice)
 {
     case "1":
+        AskForSkippedFilesDisplay();
         BackupUserProfile();
         break;
     case "2":
+        AskForSkippedFilesDisplay();
         RestoreUserProfile();
         break;
     case "3":
@@ -40,6 +44,11 @@ switch (choice)
     default:
         Console.WriteLine("Invalid choice. Please select 1, 2, or 3.");
         break;
+}
+
+void AskForSkippedFilesDisplay()
+{
+    backupClient.DisplaySkippedFiles = Spectre.Console.AnsiConsole.Confirm("Do you want to display skipped files?", false);
 }
 
 void BackupUserProfile()
