@@ -1,6 +1,6 @@
 To run this program you will need to create an App.config
 
-```XML
+```
 <?xml version="1.0" encoding="utf-8" ?>
 <configuration>
     <configSections>
