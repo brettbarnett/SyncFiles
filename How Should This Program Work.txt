@@ -1,0 +1,21 @@
+﻿What should happen when CreateBackup() is called?
+1. The first thing it should do is create a directory structure on the sftp server
+1b. Any directories that are in the source path need to be created on the destination path
+2. After creating the directory structure, it should start copying files from the source path to the destination path
+3. Files that are in the source path but not in the destination path should be copied
+4. Files that are in the source path and the desination path should be compared
+4a. The modified date of the source file should be compared to the modified date of the destination file
+4b. If the modified date of the source file is newer than the destination file, the source file should be copied to the destination path
+4c. If the modified date of the source file is older than the destination file, the source file should not be copied
+4d. If the modified date of the source file is the same as the destination file, then nothing should happen
+
+What should happen when RestoreBackup() is called?
+1. The first thing it should do is create a directory structure on the local file system
+1b. Any directories that are in the destination path need to be created on the source path
+2. After creating the directory structure, it should start copying files from the destination path to the source path
+3. Files that are in the destination path but not in the source path should be copied
+4. Files that are in the destination path and the source path should be compared
+4a. The modified date of the destination file should be compared to the modified date of the source file
+4b. If the modified date of the destination file is newer than the source file, the destination file should be copied to the source path
+4c. If the modified date of the destination file is older than the source file, the destination file should not be copied
+4d. If the modified date of the destination file is the same as the source file, then nothing should happen
