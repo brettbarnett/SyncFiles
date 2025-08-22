@@ -1,5 +1,5 @@
-To run this program you will need to create an App.config
-It should an appSettings like this
+To run this program you will need to create an App.config\
+It should have an appSettings section like this
 
 ```
 <?xml version="1.0" encoding="utf-8" ?>
