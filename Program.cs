@@ -2,9 +2,9 @@
 
 string version = "1.0.0";
 
-string ftpUser = "brett";
-string ftpPassword = "FVa-09'%P>6w";
-string ftpServer = "10.0.0.2";
+string ftpUser = "FtpUsername";
+string ftpPassword = "FtpPassword";
+string ftpServer = "FtpServerAddress";
 int ftpPort = 22;
 
 string localUser = Environment.UserName;
