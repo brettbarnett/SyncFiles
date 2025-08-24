@@ -135,10 +135,11 @@ internal class BackupClient
         CreateLocalDirectoryStructure(PathToRemoteDirectory);
 
         string localFolderPath = ConvertRemoteFolderPathToLocalFolderPath(PathToRemoteDirectory);
-        string[] files = sftpClient.ListDirectory(PathToRemoteDirectory)
-            .Where(f => !f.IsDirectory && f.Name != "." && f.Name != "..")
-            .Select(f => f.FullName)
-            .ToArray();
+
+        string[] files = RecursivelyRetrieveSftpFiles(PathToRemoteDirectory);
+            //.Where(f => !f.IsDirectory && f.Name != "." && f.Name != "..")
+            //.Select(f => f.FullName)
+            //.ToArray();
 
         foreach (string file in files)
         {
@@ -190,6 +191,39 @@ internal class BackupClient
         {
             CreateLocalDirectoryStructure(directory);
         }
+    }
+
+    private string[] RecursivelyRetrieveSftpDirectories(string PathToRemoteDirectory)
+    {
+        var directories = new List<string>();
+        var items = sftpClient.ListDirectory(PathToRemoteDirectory);
+        foreach (var item in items)
+        {
+            if (item.IsDirectory && item.Name != "." && item.Name != "..")
+            {
+                directories.Add(item.FullName);
+                directories.AddRange(RecursivelyRetrieveSftpDirectories(item.FullName));
+            }
+        }
+        return directories.ToArray();
+    }
+
+    private string[] RecursivelyRetrieveSftpFiles(string PathToRemoteDirectory)
+    {
+        var files = new List<string>();
+        var items = sftpClient.ListDirectory(PathToRemoteDirectory);
+        foreach (var item in items)
+        {
+            if (!item.IsDirectory && item.Name != "." && item.Name != "..")
+            {
+                files.Add(item.FullName);
+            }
+            else if (item.IsDirectory && item.Name != "." && item.Name != "..")
+            {
+                files.AddRange(RecursivelyRetrieveSftpFiles(item.FullName));
+            }
+        }
+        return files.ToArray();
     }
 
     private void CreateUserProfileDirectory()
