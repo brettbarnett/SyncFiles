@@ -257,8 +257,7 @@ internal class BackupClient
     {
         char driveLetter = localWorkingDirectory[0];
 
-        string localFilePath = PathToRemoteFile.Trim().Replace("/", "\\");
-        return localFilePath.Replace(remoteWorkingDirectory, $"{driveLetter}:\\Users\\{username}\\");
+        return PathToRemoteFile.Trim().Replace(remoteWorkingDirectory, $"{driveLetter}:\\Users\\{username}\\").Replace("/", "\\");
     }
 
     private string ConvertRemoteFolderPathToLocalFolderPath(string PathToRemoteFolder)
